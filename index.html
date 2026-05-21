@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rock Paper Scissors</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Rock Paper Scissors</h1>
+
+    <form action="" method="get" id="human">
+        <fieldset>
+            <legend>Select your choice:</legend>
+            <input type="radio" id="rock" name="choice" value="rock">
+            <label for="rock">Rock</label><br>
+            <input type="radio" id="paper" name="choice" value="paper">
+            <label for="paper">Paper</label><br>
+            <input type="radio" id="scissors" name="choice" value="scissors">
+            <label for="scissors">Scissors</label><br>
+        </fieldset>
+        <button type="submit">Submit</button>
+    </form>
+
+    <div id="scoreboard">
+        <p id="human-score">Human Score: 0</p>
+        <p id="computer-score">Computer Score: 0</p>
+        <p id="result"></p>
+    </div>
+
+    <script>
+        function getComputerChoice() {
+            const random = Math.floor(Math.random() * 3) + 1;
+            if (random === 1) {
+                return "rock";
+            } else if (random === 2) {
+                return "paper";
+            } else {
+                return "scissors";
+            }
+        }
+        
+        const humanForm = document.getElementById("human");
+        const humanScoreEl = document.getElementById("human-score");
+        const computerScoreEl = document.getElementById("computer-score");
+        const resultEl = document.getElementById("result");
+
+        let humanscore = 0;
+        let computerscore = 0;
+
+        function updateScoreboard(message) {
+            humanScoreEl.textContent = `Human Score: ${humanscore}`;
+            computerScoreEl.textContent = `Computer Score: ${computerscore}`;
+            resultEl.textContent = message;
+        }
+
+        humanForm.addEventListener("submit", function(event) {
+            event.preventDefault();
+            const choice = document.querySelector('input[name="choice"]:checked');
+            if (!choice) {
+                resultEl.textContent = "Please choose rock, paper, or scissors.";
+                return;
+            }
+
+            const humanChoice = choice.value;
+            const computerChoice = getComputerChoice();
+
+            if (humanChoice === computerChoice) {
+                updateScoreboard(`Draw! Both chose ${humanChoice}.`);
+                return;
+            }
+
+            const humanWins =
+                (humanChoice === "rock" && computerChoice === "scissors") ||
+                (humanChoice === "paper" && computerChoice === "rock") ||
+                (humanChoice === "scissors" && computerChoice === "paper");
+
+            if (humanWins) {
+                humanscore += 1;
+                updateScoreboard(`You win! ${humanChoice} beats ${computerChoice}.`);
+            } else {
+                computerscore += 1;
+                updateScoreboard(`Computer wins! ${computerChoice} beats ${humanChoice}.`);
+            }
+        });
+    </script>
+</body>
+</html>
